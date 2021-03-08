@@ -13,11 +13,11 @@ type Checker struct {
 	Interval        time.Duration
 }
 
-func (a *Checker) Run(srvchan chan Server) error {
+func (a *Checker) Run(srvchan chan Server) {
 	for {
 		err := a.Check(srvchan)
 		if err != nil {
-			return err
+			log.Println(err)
 		}
 
 		log.Printf("Check round finished, waiting %s...", a.Interval.String())

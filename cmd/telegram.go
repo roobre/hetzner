@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"log"
 	"net/http"
 	"net/url"
 	"roob.re/hetzner"
@@ -43,5 +42,5 @@ func main() {
 		},
 	}
 
-	log.Println(checker.Run(alerter.Start()))
+	checker.Run(alerter.Start())
 }
