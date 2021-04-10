@@ -18,8 +18,8 @@ func main() {
 	checker := &hetzner.Checker{
 		Scraper:  hetznerparser.Scrape,
 		Interval: *interval,
-		MinRequirements: []hetzner.Server{
-			{
+		CheckerFunc: hetzner.BetterThan(
+			hetzner.Server{
 				CPUBenchmark: 10000,
 				RAM:          32,
 				DiskCount:    2,
@@ -28,7 +28,7 @@ func main() {
 				ECC:          true,
 				Price:        "60",
 			},
-		},
+		),
 	}
 
 	alerter := hetzner.Alerter{
