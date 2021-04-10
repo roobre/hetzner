@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"log"
 	"net/http"
 	"net/url"
 	"roob.re/hetzner"
@@ -31,16 +32,29 @@ func main() {
 		),
 	}
 
-	alerter := hetzner.Alerter{
-		Realert: 2 * time.Hour * 24 * 30,
-		Send: func(server hetzner.Server) error {
+	var send func(server hetzner.Server) error // Sender function
+	if len(*token) == 0 || len(*chatid) == 0 {
+		// Just print to stderr if no bot token or chat-id is passed
+		log.Println("Invalid token or chat-id, falling back to just printing")
+		send = func(server hetzner.Server) error {
+			log.Print(server)
+			return nil
+		}
+	} else {
+		// Report to telegram chat
+		send = func(server hetzner.Server) error {
 			resp, err := http.Get("https://api.telegram.org/bot" + *token + "/sendMessage?chat_id=" + *chatid + "&text=" + url.QueryEscape(server.String()))
 			if err != nil {
 				return err
 			}
 			_ = resp.Body.Close()
 			return nil
-		},
+		}
+	}
+
+	alerter := hetzner.Alerter{
+		Realert: 2 * time.Hour * 24 * 30,
+		Send:    send,
 	}
 
 	checker.Run(alerter.Start())
