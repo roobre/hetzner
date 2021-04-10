@@ -44,7 +44,7 @@ func (a *Checker) Check(srvchan chan Server) error {
 			if srv.RAM < req.RAM {
 				continue
 			}
-			if srv.ECC < req.ECC {
+			if !srv.ECC && req.ECC {
 				continue
 			}
 

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/url"
 	"roob.re/hetzner"
+	hetznerparser "roob.re/hetzner/hetzner"
 	"time"
 )
 
@@ -15,7 +16,7 @@ func main() {
 	flag.Parse()
 
 	checker := &hetzner.Checker{
-		Scraper:  hetzner.HetznerScrape,
+		Scraper:  hetznerparser.Scrape,
 		Interval: *interval,
 		MinRequirements: []hetzner.Server{
 			{
@@ -24,7 +25,7 @@ func main() {
 				DiskCount:    2,
 				DiskSizeGB:   512,
 				DiskDescr:    "(?i:ssd|nvme)",
-				ECC:          1,
+				ECC:          true,
 				Price:        "60",
 			},
 		},
