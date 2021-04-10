@@ -38,8 +38,8 @@ func (s *Server) String() string {
 
 type ECCFlag bool
 
-func (f ECCFlag) UnmarshalJSON(raw []byte) error {
-	err := json.Unmarshal(raw, (*bool)(&f))
+func (f *ECCFlag) UnmarshalJSON(raw []byte) error {
+	err := json.Unmarshal(raw, (*bool)(f))
 	if err == nil {
 		return nil
 	}
@@ -50,6 +50,6 @@ func (f ECCFlag) UnmarshalJSON(raw []byte) error {
 		return err
 	}
 
-	f = i != 0
+	*f = i > 0
 	return nil
 }
